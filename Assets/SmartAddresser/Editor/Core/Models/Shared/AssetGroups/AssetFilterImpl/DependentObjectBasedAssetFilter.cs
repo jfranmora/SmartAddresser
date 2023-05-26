@@ -44,8 +44,20 @@ namespace SmartAddresser.Editor.Core.Models.Shared.AssetGroups.AssetFilterImpl
                     continue;
 
                 var path = AssetDatabase.GetAssetPath(obj);
-                var dependencies = AssetDatabase.GetDependencies(path, !_onlyDirectDependencies);
-                _dependentAssetPaths.AddRange(dependencies);
+                if (AssetDatabase.IsValidFolder(path))
+                {
+                    var assets = AssetDatabase.FindAssets("", new[] { path }).Select(AssetDatabase.GUIDToAssetPath);
+                    foreach (var assetPath in assets)
+                    {
+                        var dependencies = AssetDatabase.GetDependencies(assetPath, !_onlyDirectDependencies);
+                        _dependentAssetPaths.AddRange(dependencies);
+                    }
+                }
+                else
+                {
+                    var dependencies = AssetDatabase.GetDependencies(path, !_onlyDirectDependencies);
+                    _dependentAssetPaths.AddRange(dependencies);    
+                }
             }
 
             _dependentAssetPaths = _dependentAssetPaths.Distinct().ToList();
