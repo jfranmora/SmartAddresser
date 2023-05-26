@@ -26,12 +26,15 @@ namespace SmartAddresser.Editor.Foundation.SemanticVersioning
         public CompositeVersionComparator CreateComparator(string expression)
         {
             var split = expression.Split(',');
-            return split.Length switch
+            switch (split.Length)
             {
-                1 => CreateSingleVersionComparer(expression),
-                2 => CreateVersionRangeComparer(expression),
-                _ => throw new ArgumentException($"Invalid format expression: {expression}")
-            };
+                case 1:
+                    return CreateSingleVersionComparer(expression);
+                case 2:
+                    return CreateVersionRangeComparer(expression);
+                default:
+                    throw new ArgumentException($"Invalid format expression: {expression}");
+            }
         }
 
         private static CompositeVersionComparator CreateSingleVersionComparer(string expression)
@@ -61,12 +64,18 @@ namespace SmartAddresser.Editor.Foundation.SemanticVersioning
             var firstChar = expression[0];
             var minVersionStr = split[0].Substring(1, split[0].Length - 1);
 
-            var minVersionOperator = firstChar switch
+            VersionComparator.Operator minVersionOperator;
+            switch (firstChar)
             {
-                '[' => VersionComparator.Operator.GreaterThanOrEqual,
-                '(' => VersionComparator.Operator.GreaterThan,
-                _ => throw new ArgumentException($"Invalid format expression: {expression}")
-            };
+                case '[':
+                    minVersionOperator = VersionComparator.Operator.GreaterThanOrEqual;
+                    break;
+                case '(':
+                    minVersionOperator = VersionComparator.Operator.GreaterThan;
+                    break;
+                default:
+                    throw new ArgumentException($"Invalid format expression: {expression}");
+            }
 
             if (Version.TryCreate(minVersionStr, out var minVersion))
                 result.Add(new VersionComparator(minVersion, minVersionOperator));
@@ -77,12 +86,18 @@ namespace SmartAddresser.Editor.Foundation.SemanticVersioning
             var lastChar = expression[expression.Length - 1];
             var maxVersionStr = split[1].Substring(0, split[1].Length - 1);
 
-            var maxVersionOperator = lastChar switch
+            VersionComparator.Operator maxVersionOperator;
+            switch (lastChar)
             {
-                ']' => VersionComparator.Operator.LessThanOrEqual,
-                ')' => VersionComparator.Operator.LessThan,
-                _ => throw new ArgumentException($"Invalid format expression: {expression}")
-            };
+                case ']':
+                    maxVersionOperator = VersionComparator.Operator.LessThanOrEqual;
+                    break;
+                case ')':
+                    maxVersionOperator = VersionComparator.Operator.LessThan;
+                    break;
+                default:
+                    throw new ArgumentException($"Invalid format expression: {expression}");
+            }
 
             if (Version.TryCreate(maxVersionStr, out var maxVersion))
                 result.Add(new VersionComparator(maxVersion, maxVersionOperator));

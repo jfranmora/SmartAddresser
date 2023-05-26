@@ -31,13 +31,17 @@ namespace SmartAddresser.Editor.Core.Models.Layouts
     {
         public static bool IsMoreCriticalThan(this LayoutErrorType self, LayoutErrorType other)
         {
-            return self switch
+            switch (self)
             {
-                LayoutErrorType.None => false,
-                LayoutErrorType.Warning => other == LayoutErrorType.None,
-                LayoutErrorType.Error => other == LayoutErrorType.None || other == LayoutErrorType.Warning,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                case LayoutErrorType.None:
+                    return false;
+                case LayoutErrorType.Warning:
+                    return other == LayoutErrorType.None;
+                case LayoutErrorType.Error:
+                    return other == LayoutErrorType.None || other == LayoutErrorType.Warning;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

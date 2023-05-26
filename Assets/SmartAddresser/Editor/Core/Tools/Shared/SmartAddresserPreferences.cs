@@ -5,7 +5,9 @@ using UnityEngine;
 
 namespace SmartAddresser.Editor.Core.Tools.Shared
 {
+#if UNITY_2020_1_OR_NEWER
     [FilePath("SmartAddresser/Preferences.asset", FilePathAttribute.Location.PreferencesFolder)]
+#endif
     public sealed class SmartAddresserPreferences : ScriptableSingleton<SmartAddresserPreferences>
     {
         [SerializeField]

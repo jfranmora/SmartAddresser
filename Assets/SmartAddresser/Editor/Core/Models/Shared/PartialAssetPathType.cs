@@ -17,13 +17,17 @@ namespace SmartAddresser.Editor.Core.Models.Shared
         {
             Assert.IsFalse(string.IsNullOrEmpty(assetPath));
 
-            return self switch
+            switch (self)
             {
-                PartialAssetPathType.FileName => Path.GetFileName(assetPath),
-                PartialAssetPathType.FileNameWithoutExtensions => Path.GetFileNameWithoutExtension(assetPath),
-                PartialAssetPathType.AssetPath => assetPath,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                case PartialAssetPathType.FileName:
+                    return Path.GetFileName(assetPath);
+                case PartialAssetPathType.FileNameWithoutExtensions:
+                    return Path.GetFileNameWithoutExtension(assetPath);
+                case PartialAssetPathType.AssetPath:
+                    return assetPath;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

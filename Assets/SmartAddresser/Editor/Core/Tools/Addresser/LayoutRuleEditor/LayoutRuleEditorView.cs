@@ -116,10 +116,12 @@ namespace SmartAddresser.Editor.Core.Tools.Addresser.LayoutRuleEditor
                 foreach (Tab tab in Enum.GetValues(typeof(Tab)))
                 {
                     var isActive = tab == ActiveTab.Value;
-                    using var ccs = new EditorGUI.ChangeCheckScope();
-                    var result = GUILayout.Toggle(isActive, GetTabName(tab), EditorStyles.toolbarButton);
-                    if (ccs.changed && result)
-                        ActiveTab.Value = tab;
+                    using (var ccs = new EditorGUI.ChangeCheckScope())
+                    {
+                        var result = GUILayout.Toggle(isActive, GetTabName(tab), EditorStyles.toolbarButton);
+                        if (ccs.changed && result)
+                            ActiveTab.Value = tab;
+                    }
                 }
 
                 GUILayout.FlexibleSpace();
@@ -191,14 +193,19 @@ namespace SmartAddresser.Editor.Core.Tools.Addresser.LayoutRuleEditor
 
         private static string GetTabName(Tab tab)
         {
-            return tab switch
+            switch (tab)
             {
-                Tab.AddressRules => "Address Rules",
-                Tab.LabelRules => "Label Rules",
-                Tab.VersionRules => "Version Rules",
-                Tab.Settings => "Settings",
-                _ => throw new ArgumentOutOfRangeException(nameof(tab), tab, null)
-            };
+                case Tab.AddressRules:
+                    return "Address Rules";
+                case Tab.LabelRules:
+                    return "Label Rules";
+                case Tab.VersionRules:
+                    return "Version Rules";
+                case Tab.Settings:
+                    return "Settings";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(tab), tab, null);
+            }
         }
     }
 }

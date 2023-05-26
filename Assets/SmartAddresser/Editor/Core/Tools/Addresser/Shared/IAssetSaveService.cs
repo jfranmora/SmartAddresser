@@ -11,7 +11,7 @@ namespace SmartAddresser.Editor.Core.Tools.Addresser.Shared
         /// <summary>
         ///     Target asset.
         /// </summary>
-        public Object Asset { get; }
+        Object Asset { get; }
 
         IReadOnlyObservableProperty<bool> IsDirty { get; }
 

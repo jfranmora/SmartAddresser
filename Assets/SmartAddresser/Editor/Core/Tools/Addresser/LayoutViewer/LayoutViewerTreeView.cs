@@ -208,30 +208,39 @@ namespace SmartAddresser.Editor.Core.Tools.Addresser.LayoutViewer
 
         private static string GetText(TreeViewItem item, int columnIndex)
         {
-            return item switch
+            switch (item)
             {
-                GroupItem groupItem => (Columns)columnIndex switch
-                {
-                    Columns.GroupNameOrAddress => groupItem.Group.DisplayName,
-                    Columns.AssetPath => null,
-                    Columns.Labels => null,
-                    Columns.Versions => null,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                EntryItem entryItem => (Columns)columnIndex switch
-                {
-                    Columns.GroupNameOrAddress => entryItem.Entry.Address,
-                    Columns.AssetPath => entryItem.Entry.AssetPath,
-                    Columns.Labels => entryItem.Entry.Labels != null
-                        ? string.Join(", ", entryItem.Entry.Labels)
-                        : null,
-                    Columns.Versions => entryItem.Entry.Versions != null
-                        ? string.Join(", ", entryItem.Entry.Versions)
-                        : null,
-                    _ => throw new ArgumentOutOfRangeException(nameof(columnIndex), columnIndex, null)
-                },
-                _ => null
-            };
+                case GroupItem groupItem:
+                    switch ((Columns)columnIndex)
+                    {
+                        case Columns.GroupNameOrAddress:
+                            return groupItem.Group.DisplayName;
+                        case Columns.AssetPath:
+                        case Columns.Labels:
+                        case Columns.Versions:
+                            return null;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                case EntryItem entryItem:
+                    switch ((Columns)columnIndex)
+                    {
+                        case Columns.GroupNameOrAddress:
+                            return entryItem.Entry.Address;
+                        case Columns.AssetPath:
+                            return entryItem.Entry.AssetPath;
+                        case Columns.Labels:
+                            return entryItem.Entry.Labels != null ? string.Join(", ", entryItem.Entry.Labels) : null;
+                        case Columns.Versions:
+                            return entryItem.Entry.Versions != null
+                                ? string.Join(", ", entryItem.Entry.Versions)
+                                : null;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(columnIndex), columnIndex, null);
+                    }
+                default:
+                    return null;
+            }
         }
 
         private Texture2D GetErrorTypeIcon(LayoutErrorType errorType)

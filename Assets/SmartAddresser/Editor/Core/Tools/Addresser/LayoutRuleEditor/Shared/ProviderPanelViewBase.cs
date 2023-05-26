@@ -46,12 +46,14 @@ namespace SmartAddresser.Editor.Core.Tools.Addresser.LayoutRuleEditor.Shared
             if (_drawer != null)
             {
                 // Provider
-                using var ccs = new EditorGUI.ChangeCheckScope();
-                _drawer.DoLayout();
+                using (var ccs = new EditorGUI.ChangeCheckScope())
+                {
+                    _drawer.DoLayout();
 
-                // Notify when any value is changed.
-                if (ccs.changed)
-                    _providerValueChangedSubject.OnNext(Empty.Default);
+                    // Notify when any value is changed.
+                    if (ccs.changed)
+                        _providerValueChangedSubject.OnNext(Empty.Default);
+                }
 
                 // Border
                 GUILayout.Space(4);
