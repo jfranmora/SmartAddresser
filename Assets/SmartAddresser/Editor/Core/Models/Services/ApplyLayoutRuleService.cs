@@ -56,7 +56,7 @@ namespace SmartAddresser.Editor.Core.Models.Services
             // Add all entries to the addressable asset system.
             var versionExpression = _layoutRule.Settings.VersionExpression;
 
-            var sortedPaths = _assetDatabaseAdapter.GetAllAssetPaths().OrderBy(x => x);
+            var sortedPaths = _assetDatabaseAdapter.GetAllAssetPaths().AsParallel().OrderBy(x => x);
             foreach (var assetPath in sortedPaths)
             {
                 var guid = _assetDatabaseAdapter.AssetPathToGUID(assetPath);
