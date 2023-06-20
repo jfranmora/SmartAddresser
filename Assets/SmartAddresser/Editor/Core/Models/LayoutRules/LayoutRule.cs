@@ -127,7 +127,25 @@ namespace SmartAddresser.Editor.Core.Models.LayoutRules
                     labelRule.Setup();
 
                 if (labelRule.TryProvideLabel(assetPath, assetType, isFolder, out var label, checkIsPathValidForEntry))
-                    labels.Add(label);
+                {
+                    if (label.Contains(';'))
+                    {
+                        string[] allLabels = label.Split(';');
+                        foreach (var l in allLabels)
+                        {
+                            if (string.IsNullOrEmpty(l))
+                            {
+                                continue;
+                            }
+
+                            labels.Add(l);
+                        }
+                    }
+                    else
+                    {
+                        labels.Add(label);
+                    }
+                }
             }
 
             return labels;
